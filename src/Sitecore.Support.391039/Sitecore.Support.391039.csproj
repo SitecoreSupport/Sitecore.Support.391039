@@ -44,17 +44,20 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Sitecore.ContentSearch.Linq.Solr">
-      <HintPath>..\..\..\..\..\sitecores\sc81rev160302solr6\Website\bin\Sitecore.ContentSearch.Linq.Solr.dll</HintPath>
+      <HintPath>..\lib\Sitecore.ContentSearch.Linq.Solr.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Sitecore.ContentSearch.SolrProvider">
-      <HintPath>..\..\..\..\..\sitecores\sc81rev160302solr6\Website\bin\Sitecore.ContentSearch.SolrProvider.dll</HintPath>
+      <HintPath>..\lib\Sitecore.ContentSearch.SolrProvider.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Sitecore.Kernel, Version=8.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SC.Sitecore.Kernel.8.1.2\lib\Sitecore.Kernel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SolrNet">
-      <HintPath>..\..\..\..\..\sitecores\sc81rev160302solr6\Website\bin\SolrNet.dll</HintPath>
+      <HintPath>..\lib\SolrNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -79,6 +79,9 @@
     <Compile Include="SwitchOnRebuildSolrSearchIndex.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App_Config\Include\Sitecore.Support.391039.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

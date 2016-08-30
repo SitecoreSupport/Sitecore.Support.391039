@@ -31,14 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sitecore.Abstractions">
-      <HintPath>..\..\..\..\..\sitecores\sc81rev160302solr6\Website\bin\Sitecore.Abstractions.dll</HintPath>
+    <Reference Include="Sitecore.Abstractions, Version=8.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SC.Sitecore.Abstractions.8.1.2\lib\Sitecore.Abstractions.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Sitecore.ContentSearch">
-      <HintPath>..\..\..\..\..\sitecores\sc81rev160302solr6\Website\bin\Sitecore.ContentSearch.dll</HintPath>
+    <Reference Include="Sitecore.ContentSearch, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SC.Sitecore.ContentSearch.8.1.2\lib\Sitecore.ContentSearch.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Sitecore.ContentSearch.Linq">
-      <HintPath>..\..\..\..\..\sitecores\sc81rev160302solr6\Website\bin\Sitecore.ContentSearch.Linq.dll</HintPath>
+    <Reference Include="Sitecore.ContentSearch.Linq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SC.Sitecore.ContentSearch.Linq.8.1.2\lib\Sitecore.ContentSearch.Linq.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Sitecore.ContentSearch.Linq.Solr">
       <HintPath>..\..\..\..\..\sitecores\sc81rev160302solr6\Website\bin\Sitecore.ContentSearch.Linq.Solr.dll</HintPath>
@@ -46,8 +49,9 @@
     <Reference Include="Sitecore.ContentSearch.SolrProvider">
       <HintPath>..\..\..\..\..\sitecores\sc81rev160302solr6\Website\bin\Sitecore.ContentSearch.SolrProvider.dll</HintPath>
     </Reference>
-    <Reference Include="Sitecore.Kernel">
-      <HintPath>..\..\..\..\..\sitecores\sc81rev160302solr6\Website\bin\Sitecore.Kernel.dll</HintPath>
+    <Reference Include="Sitecore.Kernel, Version=8.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SC.Sitecore.Kernel.8.1.2\lib\Sitecore.Kernel.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SolrNet">
       <HintPath>..\..\..\..\..\sitecores\sc81rev160302solr6\Website\bin\SolrNet.dll</HintPath>
@@ -70,6 +74,9 @@
     <Compile Include="SolrSearchIndex.cs" />
     <Compile Include="SolrStatusMonitor.cs" />
     <Compile Include="SwitchOnRebuildSolrSearchIndex.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

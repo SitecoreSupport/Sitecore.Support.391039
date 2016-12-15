@@ -1,6 +1,8 @@
 # Sitecore.Support.391039
 Ensures that Sitecore works smoothly even when Solr server or one of Solr cores are not available. Periodically retries to establish connection to Solr. Does not try to execute a search query if connection is not established which allows to avoid performance degradation. Alternative reference number is 94024.
 
+[![Total downloads](https://img.shields.io/github/downloads/SitecoreSupport/Sitecore.Support.391039/total.svg)](https://github.com/SitecoreSupport/Sitecore.Support.391039/releases)
+
 ## Main
 
 This repository contains Sitecore Patch #391039, which extends the default `Sitecore.ContentSearch.SolrProvider.SolrSearchIndex` and `Sitecore.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex` to handle unavailability of Solr server.

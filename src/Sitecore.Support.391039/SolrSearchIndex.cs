@@ -28,11 +28,7 @@
 
         void ISearchIndex.Initialize()
         {
-            SolrStatusMonitor.CheckCoreStatus(this);
-            if (this.PreviousConnectionStatus == ConnectionStatus.Succeded)
-            {
-                base.Initialize();
-            }
+            SolrStatusMonitor.CheckCoreStatus(this);            
         }
     }
 }

@@ -3,6 +3,8 @@ Ensures that Sitecore works smoothly even when Solr server or one of Solr cores 
 
 [![Total downloads](https://img.shields.io/github/downloads/SitecoreSupport/Sitecore.Support.391039/total.svg)](https://github.com/SitecoreSupport/Sitecore.Support.391039/releases)
 
+[![Fixed](https://img.shields.io/badge/fixed-8.2_update--1-blue.svg)](https://dev.sitecore.net/Downloads/Sitecore%20Experience%20Platform/82/Sitecore%20Experience%20Platform%2082%20Update1/Release%20Notes)
+
 ## Main
 
 This repository contains Sitecore Patch #391039, which extends the default `Sitecore.ContentSearch.SolrProvider.SolrSearchIndex` and `Sitecore.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex` to handle unavailability of Solr server.

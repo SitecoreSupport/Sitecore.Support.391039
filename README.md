@@ -1,8 +1,6 @@
 # Sitecore.Support.391039
 Ensures that Sitecore works smoothly even when Solr server or one of Solr cores are not available. Periodically retries to establish connection to Solr. Does not try to execute a search query if connection is not established which allows to avoid performance degradation. Alternative reference number is 94024.
 
-[![Total downloads](https://img.shields.io/github/downloads/SitecoreSupport/Sitecore.Support.391039/total.svg)](https://github.com/SitecoreSupport/Sitecore.Support.391039/releases)
-
 [![Fixed](https://img.shields.io/badge/fixed-8.2_update--1-blue.svg)](https://dev.sitecore.net/Downloads/Sitecore%20Experience%20Platform/82/Sitecore%20Experience%20Platform%2082%20Update1/Release%20Notes)
 
 ## Main
@@ -38,3 +36,5 @@ This patch is licensed under the [Sitecore Corporation A/S License](LICENSE).
 ## Download
 
 Downloads are available via [GitHub Releases](https://github.com/SitecoreSupport/Sitecore.Support.391039/releases).
+
+[![Total downloads](https://img.shields.io/github/downloads/SitecoreSupport/Sitecore.Support.391039/total.svg)](https://github.com/SitecoreSupport/Sitecore.Support.391039/releases)

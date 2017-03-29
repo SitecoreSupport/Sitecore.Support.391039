@@ -7,7 +7,7 @@
     <ProjectGuid>{9F9126DD-285C-4E62-9B24-DA472187341F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sitecore.Support._391039</RootNamespace>
+    <RootNamespace>Sitecore.Support</RootNamespace>
     <AssemblyName>Sitecore.Support.391039</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -79,9 +79,7 @@
     <Compile Include="SwitchOnRebuildSolrSearchIndex.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Config\Include\Sitecore.Support.391039.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Content Include="App_Config\Include\Sitecore.Support.391039.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

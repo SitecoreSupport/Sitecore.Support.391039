@@ -13,7 +13,7 @@
 
         public override IQueryable<TItem> GetQueryable<TItem>(params IExecutionContext[] executionContexts)
         {
-            System.Globalization.CultureInfo cultureInfo = System.Globalization.CultureInfo.GetCultureInfo(ContentSearchManager.SearchConfiguration.AnalyticsDefaultLanguage);
+            System.Globalization.CultureInfo cultureInfo = System.Globalization.CultureInfo.GetCultureInfo(Data.Managers.LanguageManager.DefaultLanguage.CultureInfo.Name);
             System.Collections.Generic.List<IExecutionContext> list = (from x in executionContexts
                                                                        where !(x is CultureExecutionContext)
                                                                        select x).ToList<IExecutionContext>();

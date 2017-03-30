@@ -8,20 +8,12 @@
     {
         protected internal ConnectionStatus PreviousConnectionStatus = ConnectionStatus.Unknown;
 
-        public override IProviderSearchContext CreateSearchContext(SearchSecurityOptions options = SearchSecurityOptions.Default)
+        public override IProviderSearchContext CreateSearchContext(SearchSecurityOptions options = SearchSecurityOptions.EnableSecurityCheck)
         {
-            if (this.Group == IndexGroup.Experience)
-            {
-                return new Sitecore.Support.ContentSearch.SolrProvider.SolrAnalyticsSearchContext(this, options);
-            }
             return new Sitecore.Support.ContentSearch.SolrProvider.SolrSearchContext(this, options);
         }
-
-        public SolrSearchIndex(string name, string core, IIndexPropertyStore propertyStore) : this(name, core, propertyStore, null)
-        {
-        }
-
-        public SolrSearchIndex(string name, string core, IIndexPropertyStore propertyStore, string group) : base(name, core, propertyStore, group)
+    
+        public SolrSearchIndex(string name, string core, IIndexPropertyStore propertyStore) : base(name, core, propertyStore)
         {
 
         }

@@ -7,12 +7,8 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
     public class SwitchOnRebuildSolrSearchIndex : Sitecore.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex, ISearchIndex
     {
         protected internal ConnectionStatus PreviousConnectionStatus = ConnectionStatus.Unknown;
-        public override IProviderSearchContext CreateSearchContext(SearchSecurityOptions options = SearchSecurityOptions.Default)
+        public override IProviderSearchContext CreateSearchContext(SearchSecurityOptions options = SearchSecurityOptions.EnableSecurityCheck)
         {
-            if (this.Group == IndexGroup.Experience)
-            {
-                return new Sitecore.Support.ContentSearch.SolrProvider.SolrAnalyticsSearchContext(this, options);
-            }
             return new Sitecore.Support.ContentSearch.SolrProvider.SolrSearchContext(this, options);
         }
 

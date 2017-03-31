@@ -10,10 +10,6 @@
 
         public override IProviderSearchContext CreateSearchContext(SearchSecurityOptions options = SearchSecurityOptions.Default)
         {
-            if (this.Group == IndexGroup.Experience)
-            {
-                return new Sitecore.Support.ContentSearch.SolrProvider.SolrAnalyticsSearchContext(this, options);
-            }
             return new Sitecore.Support.ContentSearch.SolrProvider.SolrSearchContext(this, options);
         }
 

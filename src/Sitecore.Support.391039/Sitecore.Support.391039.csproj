@@ -43,12 +43,12 @@
       <HintPath>..\packages\SC.Sitecore.ContentSearch.Linq.8.0.3\lib\Sitecore.ContentSearch.Linq.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Sitecore.ContentSearch.Linq.Solr">
-      <HintPath>..\lib\Sitecore.ContentSearch.Linq.Solr.dll</HintPath>
+    <Reference Include="Sitecore.ContentSearch.Linq.Solr, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SC.Sitecore.ContentSearch.Linq.Solr.8.0.3\lib\Sitecore.ContentSearch.Linq.Solr.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Sitecore.ContentSearch.SolrProvider">
-      <HintPath>..\lib\Sitecore.ContentSearch.SolrProvider.dll</HintPath>
+    <Reference Include="Sitecore.ContentSearch.SolrProvider, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SC.Sitecore.ContentSearch.SolrProvider.8.0.3\lib\Sitecore.ContentSearch.SolrProvider.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sitecore.Kernel">
@@ -72,7 +72,6 @@
     <Compile Include="ConnectionStatus.cs" />
     <Compile Include="LinqToSolrIndex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SolrAnalyticsSearchContext.cs" />
     <Compile Include="SolrSearchContext.cs" />
     <Compile Include="SolrSearchIndex.cs" />
     <Compile Include="SolrStatusMonitor.cs" />

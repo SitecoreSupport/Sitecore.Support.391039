@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Sitecore.ContentSearch;
     using Sitecore.ContentSearch.Diagnostics;
     using Sitecore.ContentSearch.Linq.Common;
     using Sitecore.ContentSearch.Pipelines.QueryGlobalFilters;
@@ -10,7 +11,7 @@
     using Sitecore.ContentSearch.Utilities;
     using Sitecore.Diagnostics;
 
-    public class SolrSearchContext : Sitecore.ContentSearch.SolrProvider.SolrSearchContext, Sitecore.ContentSearch.IProviderSearchContext
+    public class SolrSearchContext : Sitecore.ContentSearch.SolrProvider.SolrSearchContext, IProviderSearchContext
     {
         private readonly IContentSearchConfigurationSettings contentSearchSettings;
 
@@ -19,20 +20,22 @@
             this.contentSearchSettings = this.Index.Locator.GetInstance<IContentSearchConfigurationSettings>();
         }
 
-        IQueryable<TItem> Sitecore.ContentSearch.IProviderSearchContext.GetQueryable<TItem>()
+        IQueryable<TItem> IProviderSearchContext.GetQueryable<TItem>()
         {
-            return ((Sitecore.ContentSearch.IProviderSearchContext)this).GetQueryable<TItem>(new IExecutionContext[0]);
+           return this.GetQueryableImpl<TItem>(new IExecutionContext[0]);
         }
 
-        IQueryable<TItem> Sitecore.ContentSearch.IProviderSearchContext.GetQueryable<TItem>(IExecutionContext executionContext)
+        IQueryable<TItem> IProviderSearchContext.GetQueryable<TItem>(IExecutionContext executionContext)
         {
-            return ((Sitecore.ContentSearch.IProviderSearchContext)this).GetQueryable<TItem>(new IExecutionContext[]
-            {
-                executionContext
-            });
+            return this.GetQueryableImpl<TItem>( new[] {executionContext} );
         }
 
-        IQueryable<TItem> Sitecore.ContentSearch.IProviderSearchContext.GetQueryable<TItem>(params IExecutionContext[] executionContexts)
+        IQueryable<TItem> IProviderSearchContext.GetQueryable<TItem>(params IExecutionContext[] executionContexts)
+        {
+            return this.GetQueryableImpl<TItem>(executionContexts);
+        }
+
+        protected virtual IQueryable<TItem> GetQueryableImpl<TItem>(params IExecutionContext[] executionContexts)
         {
             var failResistantSolrSearchIndex = this.Index as Sitecore.Support.ContentSearch.SolrProvider.SolrSearchIndex;
 

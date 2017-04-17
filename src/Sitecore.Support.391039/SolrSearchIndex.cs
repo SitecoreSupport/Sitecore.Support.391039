@@ -1,10 +1,11 @@
-﻿namespace Sitecore.Support.ContentSearch.SolrProvider
+﻿
+namespace Sitecore.Support.ContentSearch.SolrProvider
 {
     using Sitecore.ContentSearch.Security;
     using Sitecore.ContentSearch;
     using Sitecore.ContentSearch.Maintenance;
 
-    public class SolrSearchIndex : Sitecore.ContentSearch.SolrProvider.SolrSearchIndex, ISearchIndex
+    public class SolrSearchIndex : Sitecore.ContentSearch.SolrProvider.SolrSearchIndex
     {
         protected internal ConnectionStatus PreviousConnectionStatus = ConnectionStatus.Unknown;
 
@@ -19,12 +20,15 @@
 
         public SolrSearchIndex(string name, string core, IIndexPropertyStore propertyStore, string group) : base(name, core, propertyStore, group)
         {
-
         }
 
-        void ISearchIndex.Initialize()
+        public override void Initialize()
         {
-            SolrStatusMonitor.CheckCoreStatus(this);            
+            SolrStatusMonitor.CheckCoreStatus(this);
+            if (this.PreviousConnectionStatus == ConnectionStatus.Succeded)
+            {
+                base.Initialize();
+            }
         }
     }
 }

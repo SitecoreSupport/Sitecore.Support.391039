@@ -33,7 +33,15 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
 
         ConnectionStatus IFailResistantIndex.ConnectionStatus
         {
-            get { return this.PreviousConnectionStatus; }
+            get
+            {
+                return this.PreviousConnectionStatus;
+            }
+
+            set
+            {
+                this.PreviousConnectionStatus = value;
+            }
         }
     }
 }

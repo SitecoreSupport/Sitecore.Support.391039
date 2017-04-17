@@ -3,6 +3,6 @@ namespace Sitecore.Support
 {
     public interface IFailResistantIndex
     {
-        ConnectionStatus ConnectionStatus { get; }
+        ConnectionStatus ConnectionStatus { get; set; }
     }
 }

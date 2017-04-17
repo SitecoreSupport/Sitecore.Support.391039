@@ -15,32 +15,30 @@
 
     public class LinqToSolrIndex<TItem> : Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>
     {
-        private static readonly FieldInfo contextFieldInfo;
+        private readonly Sitecore.Support.ContentSearch.SolrProvider.SolrSearchContext context;
 
         private static readonly MethodInfo executeMethodInfo;
 
         static LinqToSolrIndex()
         {
-            contextFieldInfo = typeof(Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>)
-                .GetField("context", BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.IsNotNull(contextFieldInfo, "Could not find 'context' field in type Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>");
-
             executeMethodInfo = typeof(Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>)
                 .GetMethod("Execute", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.IsNotNull(executeMethodInfo, "Could not find 'Execute' method in type Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>");
         }
 
-        public LinqToSolrIndex(SolrSearchContext context, IExecutionContext executionContext) : base(context, executionContext)
+        public LinqToSolrIndex(Sitecore.Support.ContentSearch.SolrProvider.SolrSearchContext context, IExecutionContext executionContext) : base(context, executionContext)
         {
+            this.context = context;
         }
 
-        public LinqToSolrIndex(SolrSearchContext context, IExecutionContext[] executionContexts) : base(context, executionContexts)
+        public LinqToSolrIndex(Sitecore.Support.ContentSearch.SolrProvider.SolrSearchContext context, IExecutionContext[] executionContexts) : base(context, executionContexts)
         {
+            this.context = context;
         }
 
         public override IEnumerable<TElement> FindElements<TElement>(SolrCompositeQuery compositeQuery)
         {
-            var failResistantSolrSearchIndex = ((SolrSearchContext)contextFieldInfo.GetValue(this)).Index as Sitecore.Support.ContentSearch.SolrProvider.SolrSearchIndex;
+            var failResistantSolrSearchIndex = this.context.Index as Sitecore.Support.ContentSearch.SolrProvider.SolrSearchIndex;
 
             if (failResistantSolrSearchIndex != null)
             {
@@ -54,7 +52,7 @@
                 }
             }
 
-            var failResistantSwitchOnRebuildSolrSearchIndex = ((SolrSearchContext)contextFieldInfo.GetValue(this)).Index as Sitecore.Support.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex;
+            var failResistantSwitchOnRebuildSolrSearchIndex = this.context.Index as Sitecore.Support.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex;
             if (failResistantSwitchOnRebuildSolrSearchIndex != null)
             {
                 if (failResistantSwitchOnRebuildSolrSearchIndex.PreviousConnectionStatus == ConnectionStatus.Succeded)
@@ -77,7 +75,7 @@
                 System.Type resultType = typeof(TResult).GetGenericArguments()[0];
 
                 SolrQueryResults<System.Collections.Generic.Dictionary<string, object>> results = null;
-                var failResistantSolrSearchIndex = ((SolrSearchContext)contextFieldInfo.GetValue(this)).Index as Sitecore.Support.ContentSearch.SolrProvider.SolrSearchIndex;
+                var failResistantSolrSearchIndex = this.context.Index as Sitecore.Support.ContentSearch.SolrProvider.SolrSearchIndex;
                 if (failResistantSolrSearchIndex != null)
                 {
                     if (failResistantSolrSearchIndex.PreviousConnectionStatus != ConnectionStatus.Succeded)
@@ -86,7 +84,7 @@
                         Log.Error("SUPPORT: unable to execute a search query. Solr core [" + failResistantSolrSearchIndex.Core + "] is unavailable.", typeof(SolrSearchContext));
                     }
                 }
-                var failResistantSwitchOnRebuildSolrSearchIndex = ((SolrSearchContext)contextFieldInfo.GetValue(this)).Index as Sitecore.Support.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex;
+                var failResistantSwitchOnRebuildSolrSearchIndex = this.context.Index as Sitecore.Support.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex;
                 if (failResistantSwitchOnRebuildSolrSearchIndex != null)
                 {
                     if (failResistantSwitchOnRebuildSolrSearchIndex.PreviousConnectionStatus != ConnectionStatus.Succeded)
@@ -102,11 +100,11 @@
                 System.Type type3 = solrSearchResultsType.MakeGenericType(new System.Type[] { resultType });
                 System.Reflection.MethodInfo info2 = base.GetType().BaseType.GetMethod("ApplyScalarMethods", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).MakeGenericMethod(new System.Type[] { typeof(TResult), resultType });
                 SelectMethod method = LinqToSolrIndex<TItem>.GetSelectMethod(compositeQuery);
-                object obj2 = ReflectionUtility.CreateInstance(type3, (object[])new object[] { (SolrSearchContext)contextFieldInfo.GetValue(this), results, method, compositeQuery.ExecutionContexts, compositeQuery.VirtualFieldProcessors });
+                object obj2 = ReflectionUtility.CreateInstance(type3, (object[])new object[] { this.context, results, method, compositeQuery.ExecutionContexts, compositeQuery.VirtualFieldProcessors });
                 return (TResult)info2.Invoke(this, (object[])new object[] { compositeQuery, obj2, results });
             }
             SolrQueryResults<System.Collections.Generic.Dictionary<string, object>> searchResults = null;
-            var failResistantSolrSearchIndex2 = ((SolrSearchContext)contextFieldInfo.GetValue(this)).Index as Sitecore.Support.ContentSearch.SolrProvider.SolrSearchIndex;
+            var failResistantSolrSearchIndex2 = this.context.Index as Sitecore.Support.ContentSearch.SolrProvider.SolrSearchIndex;
             if (failResistantSolrSearchIndex2 != null)
             {
                 if (failResistantSolrSearchIndex2.PreviousConnectionStatus != ConnectionStatus.Succeded)
@@ -115,7 +113,7 @@
                     Log.Error("SUPPORT: unable to execute a search query. Solr core [" + failResistantSolrSearchIndex2.Core + "] is unavailable.", typeof(SolrSearchContext));
                 }
             }
-            var failResistantSwitchOnRebuildSolrSearchIndex2 = ((SolrSearchContext)contextFieldInfo.GetValue(this)).Index as Sitecore.Support.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex;
+            var failResistantSwitchOnRebuildSolrSearchIndex2 = this.context.Index as Sitecore.Support.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex;
             if (failResistantSwitchOnRebuildSolrSearchIndex2 != null)
             {
                 if (failResistantSwitchOnRebuildSolrSearchIndex2.PreviousConnectionStatus != ConnectionStatus.Succeded)
@@ -132,7 +130,7 @@
                         executeMethodInfo.Invoke(this, new object[] { compositeQuery, typeof(TResult) });
             }
             SelectMethod selectMethod = LinqToSolrIndex<TItem>.GetSelectMethod(compositeQuery);
-            var processedResults = (solrSearchResultsType.MakeGenericType(typeof(TResult)).GetConstructor(new Type[] { typeof(SolrSearchContext), typeof(SolrQueryResults<Dictionary<string, object>>), typeof(SelectMethod), typeof(IEnumerable<IExecutionContext>), typeof(IEnumerable<IFieldQueryTranslator>) })).Invoke(new object[] { (SolrSearchContext)contextFieldInfo.GetValue(this), searchResults, selectMethod, compositeQuery.ExecutionContexts, compositeQuery.VirtualFieldProcessors });
+            var processedResults = (solrSearchResultsType.MakeGenericType(typeof(TResult)).GetConstructor(new Type[] { typeof(SolrSearchContext), typeof(SolrQueryResults<Dictionary<string, object>>), typeof(SelectMethod), typeof(IEnumerable<IExecutionContext>), typeof(IEnumerable<IFieldQueryTranslator>) })).Invoke(new object[] { this.context, searchResults, selectMethod, compositeQuery.ExecutionContexts, compositeQuery.VirtualFieldProcessors });
             var ApplyScalarMethodsMethodInfo = base.GetType().BaseType.GetMethod("ApplyScalarMethods", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).MakeGenericMethod(new System.Type[] { typeof(TResult), typeof(TResult) });
             return (TResult)ApplyScalarMethodsMethodInfo.Invoke(this, new object[] { compositeQuery, processedResults, searchResults });
         }

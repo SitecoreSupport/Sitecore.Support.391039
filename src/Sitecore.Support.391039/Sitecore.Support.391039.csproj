@@ -44,20 +44,20 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Sitecore.ContentSearch.Linq.Solr, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SC.Sitecore.ContentSearch.Linq.Solr.8.0.3\lib\Sitecore.ContentSearch.Linq.Solr.dll</HintPath>
-      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Sitecore.ContentSearch.Linq.Solr.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.ContentSearch.SolrProvider, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SC.Sitecore.ContentSearch.SolrProvider.8.0.3\lib\Sitecore.ContentSearch.SolrProvider.dll</HintPath>
-      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Sitecore.ContentSearch.SolrProvider.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\packages\SC.Sitecore.Kernel.8.0.3\lib\Sitecore.Kernel.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SolrNet">
-      <HintPath>..\lib\SolrNet.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="SolrNet, Version=0.4.0.2002, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\SolrNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -79,6 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\Include\Sitecore.Support.391039.config" />
+    <Content Include="lib\Sitecore.ContentSearch.Linq.Solr.dll" />
+    <Content Include="lib\Sitecore.ContentSearch.SolrProvider.dll" />
+    <Content Include="lib\SolrNet.dll" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

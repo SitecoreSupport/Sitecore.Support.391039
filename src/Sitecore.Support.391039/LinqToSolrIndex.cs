@@ -12,31 +12,36 @@
     using Sitecore.ContentSearch.Utilities;
     using Sitecore.Diagnostics;
     using SolrNet;
+
     public class LinqToSolrIndex<TItem> : Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>
     {
         private static readonly FieldInfo contextFieldInfo;
+
         private static readonly MethodInfo executeMethodInfo;
+
         static LinqToSolrIndex()
         {
-            contextFieldInfo = typeof(Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>).GetField("context",
-            BindingFlags.NonPublic | BindingFlags.Instance);
+            contextFieldInfo = typeof(Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>)
+                .GetField("context", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.IsNotNull(contextFieldInfo, "Could not find 'context' field in type Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>");
-            executeMethodInfo = typeof(Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>).GetMethod("Execute",
-            BindingFlags.NonPublic | BindingFlags.Instance);
+
+            executeMethodInfo = typeof(Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>)
+                .GetMethod("Execute", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.IsNotNull(executeMethodInfo, "Could not find 'Execute' method in type Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>");
         }
 
-        public LinqToSolrIndex(SolrSearchContext context, Sitecore.ContentSearch.Linq.Common.IExecutionContext executionContext) : base(context, executionContext)
+        public LinqToSolrIndex(SolrSearchContext context, IExecutionContext executionContext) : base(context, executionContext)
         {
         }
 
-        public LinqToSolrIndex(SolrSearchContext context, Sitecore.ContentSearch.Linq.Common.IExecutionContext[] executionContexts) : base(context, executionContexts)
+        public LinqToSolrIndex(SolrSearchContext context, IExecutionContext[] executionContexts) : base(context, executionContexts)
         {
         }
 
         public override IEnumerable<TElement> FindElements<TElement>(SolrCompositeQuery compositeQuery)
         {
             var failResistantSolrSearchIndex = ((SolrSearchContext)contextFieldInfo.GetValue(this)).Index as Sitecore.Support.ContentSearch.SolrProvider.SolrSearchIndex;
+
             if (failResistantSolrSearchIndex != null)
             {
                 if (failResistantSolrSearchIndex.PreviousConnectionStatus == ConnectionStatus.Succeded)
@@ -48,6 +53,7 @@
                     Log.Error("SUPPORT: unable to execute a search query. Solr core [" + failResistantSolrSearchIndex.Core + "] is unavailable.", typeof(SolrSearchContext));
                 }
             }
+
             var failResistantSwitchOnRebuildSolrSearchIndex = ((SolrSearchContext)contextFieldInfo.GetValue(this)).Index as Sitecore.Support.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex;
             if (failResistantSwitchOnRebuildSolrSearchIndex != null)
             {
@@ -55,11 +61,10 @@
                 {
                     return base.FindElements<TElement>(compositeQuery);
                 }
-                else
-                {
-                    Log.Error("SUPPORT: unable to execute a search query. Solr core [" + failResistantSwitchOnRebuildSolrSearchIndex.Core + "] is unavailable.", typeof(SolrSearchContext));
-                }
+
+                Log.Error("SUPPORT: unable to execute a search query. Solr core [" + failResistantSwitchOnRebuildSolrSearchIndex.Core + "] is unavailable.", this);
             }
+
             return new System.Collections.Generic.List<TElement>();
         }
 

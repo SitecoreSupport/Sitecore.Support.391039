@@ -7,12 +7,16 @@
     using Sitecore.ContentSearch.Pipelines.QueryGlobalFilters;
     using Sitecore.ContentSearch.SearchTypes;
     using Sitecore.ContentSearch.Security;
+    using Sitecore.ContentSearch.Utilities;
     using Sitecore.Diagnostics;
 
     public class SolrSearchContext : Sitecore.ContentSearch.SolrProvider.SolrSearchContext, Sitecore.ContentSearch.IProviderSearchContext
     {
+        private readonly IContentSearchConfigurationSettings contentSearchSettings;
+
         public SolrSearchContext(Sitecore.ContentSearch.SolrProvider.SolrSearchIndex solrSearchIndex, SearchSecurityOptions options) : base(solrSearchIndex, options)
         {
+            this.contentSearchSettings = this.Index.Locator.GetInstance<IContentSearchConfigurationSettings>();
         }
 
         IQueryable<TItem> Sitecore.ContentSearch.IProviderSearchContext.GetQueryable<TItem>()
@@ -43,7 +47,8 @@
                 return new EnumerableQuery<TItem>(new List<TItem>());
             }
             LinqToSolrIndex<TItem> linqToSolrIndex = new Sitecore.Support.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>(this, executionContexts);
-            if (Sitecore.ContentSearch.Utilities.ContentSearchConfigurationSettings.EnableSearchDebug)
+
+            if (this.contentSearchSettings.EnableSearchDebug())
             {
                 ((IHasTraceWriter)linqToSolrIndex).TraceWriter = new LoggingTraceWriter(SearchLog.Log);
             }

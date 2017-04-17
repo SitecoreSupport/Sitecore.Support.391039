@@ -47,7 +47,7 @@
 
         protected virtual bool IsIndexAvailable(ISearchIndex index)
         {
-            var failResistantIndex = this.context.Index as IFailResistantIndex;
+            var failResistantIndex = index as IFailResistantIndex;
 
             if (failResistantIndex == null)
             {

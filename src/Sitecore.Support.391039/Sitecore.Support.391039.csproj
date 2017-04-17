@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectionStatus.cs" />
+    <Compile Include="IFailResistantIndex.cs" />
     <Compile Include="LinqToSolrIndex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolrSearchContext.cs" />

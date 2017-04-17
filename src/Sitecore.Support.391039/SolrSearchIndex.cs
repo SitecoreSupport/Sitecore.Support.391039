@@ -5,7 +5,7 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
     using Sitecore.ContentSearch;
     using Sitecore.ContentSearch.Maintenance;
 
-    public class SolrSearchIndex : Sitecore.ContentSearch.SolrProvider.SolrSearchIndex
+    public class SolrSearchIndex : Sitecore.ContentSearch.SolrProvider.SolrSearchIndex, IFailResistantIndex
     {
         protected internal ConnectionStatus PreviousConnectionStatus = ConnectionStatus.Unknown;
 
@@ -29,6 +29,11 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
             {
                 base.Initialize();
             }
+        }
+
+        ConnectionStatus IFailResistantIndex.ConnectionStatus
+        {
+            get { return this.PreviousConnectionStatus; }
         }
     }
 }

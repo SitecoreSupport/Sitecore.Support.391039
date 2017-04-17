@@ -5,7 +5,7 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
     using Sitecore.ContentSearch.Maintenance;
     using Sitecore.ContentSearch.Security;
 
-    public class SwitchOnRebuildSolrSearchIndex : Sitecore.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex
+    public class SwitchOnRebuildSolrSearchIndex : Sitecore.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex, IFailResistantIndex
     {
         protected internal ConnectionStatus PreviousConnectionStatus = ConnectionStatus.Unknown;
         public override IProviderSearchContext CreateSearchContext(SearchSecurityOptions options = SearchSecurityOptions.Default)
@@ -25,6 +25,11 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
             {
                 base.Initialize();
             }
+        }
+
+        ConnectionStatus IFailResistantIndex.ConnectionStatus
+        {
+            get { return this.PreviousConnectionStatus; }
         }
     }
 }

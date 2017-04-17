@@ -15,8 +15,11 @@
     {
         private readonly IContentSearchConfigurationSettings contentSearchSettings;
 
+        private readonly Sitecore.ContentSearch.SolrProvider.SolrSearchIndex index;
+
         public SolrSearchContext(Sitecore.ContentSearch.SolrProvider.SolrSearchIndex solrSearchIndex, SearchSecurityOptions options) : base(solrSearchIndex, options)
         {
+            this.index = solrSearchIndex;
             this.contentSearchSettings = this.Index.Locator.GetInstance<IContentSearchConfigurationSettings>();
         }
 
@@ -37,19 +40,15 @@
 
         protected virtual IQueryable<TItem> GetQueryableImpl<TItem>(params IExecutionContext[] executionContexts)
         {
-            var failResistantSolrSearchIndex = this.Index as Sitecore.Support.ContentSearch.SolrProvider.SolrSearchIndex;
+            var failResistantIndex = this.Index as IFailResistantIndex;
 
-            if (failResistantSolrSearchIndex != null && failResistantSolrSearchIndex.PreviousConnectionStatus != ConnectionStatus.Succeded)
-            { 
-                Log.Error("SUPPORT: unable to execute a search query. Solr core ["+ failResistantSolrSearchIndex.Core + "] is unavailable.", typeof(SolrSearchContext));
-                return new EnumerableQuery<TItem>(new List<TItem>());
-            }
-
-            var failResistantSwitchOnRebuildSolrSearchIndex = this.Index as Sitecore.Support.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex;
-            if (failResistantSwitchOnRebuildSolrSearchIndex != null && failResistantSwitchOnRebuildSolrSearchIndex.PreviousConnectionStatus != ConnectionStatus.Succeded)
+            if (failResistantIndex != null)
             {
-                Log.Error("SUPPORT: unable to execute a search query. Solr core [" + failResistantSwitchOnRebuildSolrSearchIndex.Core + "] is unavailable.", typeof(SolrSearchContext));
-                return new EnumerableQuery<TItem>(new List<TItem>());
+                if (failResistantIndex.ConnectionStatus != ConnectionStatus.Succeded)
+                {
+                    Log.Error("SUPPORT: unable to execute a search query. Solr core [" + this.index.Core + "] is unavailable.", this);
+                    return new EnumerableQuery<TItem>(new List<TItem>());
+                }
             }
 
             LinqToSolrIndex<TItem> linqToSolrIndex = new Sitecore.Support.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>(this, executionContexts);

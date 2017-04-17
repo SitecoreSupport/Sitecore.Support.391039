@@ -35,23 +35,27 @@
         IQueryable<TItem> Sitecore.ContentSearch.IProviderSearchContext.GetQueryable<TItem>(params IExecutionContext[] executionContexts)
         {
             var failResistantSolrSearchIndex = this.Index as Sitecore.Support.ContentSearch.SolrProvider.SolrSearchIndex;
+
             if (failResistantSolrSearchIndex != null && failResistantSolrSearchIndex.PreviousConnectionStatus != ConnectionStatus.Succeded)
             { 
                 Log.Error("SUPPORT: unable to execute a search query. Solr core ["+ failResistantSolrSearchIndex.Core + "] is unavailable.", typeof(SolrSearchContext));
                 return new EnumerableQuery<TItem>(new List<TItem>());
             }
+
             var failResistantSwitchOnRebuildSolrSearchIndex = this.Index as Sitecore.Support.ContentSearch.SolrProvider.SwitchOnRebuildSolrSearchIndex;
             if (failResistantSwitchOnRebuildSolrSearchIndex != null && failResistantSwitchOnRebuildSolrSearchIndex.PreviousConnectionStatus != ConnectionStatus.Succeded)
             {
                 Log.Error("SUPPORT: unable to execute a search query. Solr core [" + failResistantSwitchOnRebuildSolrSearchIndex.Core + "] is unavailable.", typeof(SolrSearchContext));
                 return new EnumerableQuery<TItem>(new List<TItem>());
             }
+
             LinqToSolrIndex<TItem> linqToSolrIndex = new Sitecore.Support.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>(this, executionContexts);
 
             if (this.contentSearchSettings.EnableSearchDebug())
             {
                 ((IHasTraceWriter)linqToSolrIndex).TraceWriter = new LoggingTraceWriter(SearchLog.Log);
             }
+
             IQueryable<TItem> result = linqToSolrIndex.GetQueryable();
             if (typeof(TItem).IsAssignableFrom(typeof(SearchResultItem)))
             {
@@ -59,6 +63,7 @@
                 this.Index.Locator.GetInstance<Sitecore.Abstractions.ICorePipeline>().Run("contentSearch.getGlobalLinqFilters", queryGlobalFiltersArgs);
                 result = (IQueryable<TItem>)queryGlobalFiltersArgs.Query;
             }
+
             return result;
         }
     }

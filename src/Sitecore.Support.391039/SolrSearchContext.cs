@@ -62,7 +62,7 @@
             if (typeof(TItem).IsAssignableFrom(typeof(SearchResultItem)))
             {
                 QueryGlobalFiltersArgs queryGlobalFiltersArgs = new QueryGlobalFiltersArgs(linqToSolrIndex.GetQueryable(), typeof(TItem), executionContexts.ToList<IExecutionContext>());
-                this.Index.Locator.GetInstance<Sitecore.Abstractions.ICorePipeline>().Run("contentSearch.getGlobalLinqFilters", queryGlobalFiltersArgs);
+                this.Index.Locator.GetInstance<Sitecore.ContentSearch.Abstractions.ICorePipeline>().Run("contentSearch.getGlobalLinqFilters", queryGlobalFiltersArgs);
                 result = (IQueryable<TItem>)queryGlobalFiltersArgs.Query;
             }
 

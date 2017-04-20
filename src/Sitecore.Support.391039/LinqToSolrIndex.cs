@@ -1,13 +1,28 @@
 ﻿namespace Sitecore.Support.ContentSearch.SolrProvider
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
     using Sitecore.ContentSearch;
+    using Sitecore.ContentSearch.Linq;
     using Sitecore.ContentSearch.Linq.Common;
     using Sitecore.ContentSearch.Linq.Solr;
+    using Sitecore.ContentSearch.Utilities;
     using Sitecore.Diagnostics;
+    using SolrNet;
 
     public class LinqToSolrIndex<TItem> : Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>
     {
+        private static readonly MethodInfo miApplyScalarMethods;
+
+        static LinqToSolrIndex()
+        {
+            miApplyScalarMethods = typeof(Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>)
+                .GetMethod("ApplyScalarMethods", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.IsNotNull(miApplyScalarMethods, "Can't find ApplyScalarMethods method");
+        }
+
         private readonly Sitecore.Support.ContentSearch.SolrProvider.SolrSearchContext context;
 
         public LinqToSolrIndex(Sitecore.Support.ContentSearch.SolrProvider.SolrSearchContext context, IExecutionContext executionContext) : base(context, executionContext)
@@ -61,6 +76,14 @@
             }
 
             return false;
+        }
+        
+        [UsedImplicitly]
+        private TResult ApplyScalarMethods<TResult, TDocument>(SolrCompositeQuery compositeQuery, object processedResults, SolrQueryResults<Dictionary<string, object>> results)
+        {
+            var documentType = typeof(TResult).GetGenericArguments()[0];
+            var miApplyScalarMethodsGeneric = miApplyScalarMethods.MakeGenericMethod(typeof(TResult), documentType);
+            return (TResult)miApplyScalarMethodsGeneric.Invoke(this, new object[] { compositeQuery, processedResults, results });
         }
     }
 }

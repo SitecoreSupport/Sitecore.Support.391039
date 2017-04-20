@@ -67,7 +67,6 @@
                     Log.Warn(
                         $"SUPPORT: Status check for [{solrSearchIndex.Core}] Solr core failed. Error suppressed as not related to Solr core availability. Details: https://issues.apache.org/jira/browse/LUCENE-7188",
                         solrSearchIndex);
-                    Log.Debug($"SUPPORT: Solr exception\r\n{ex}", solrAdmin);
 
                     return;
                 }
@@ -105,13 +104,11 @@
                 if (ex.Message.Contains("java.lang.IllegalStateException") && ex.Message.Contains("appears both in delegate and in cache"))
                 {
                     Log.Warn($"SUPPORT: Status check for [{SolrContentSearchManager.ServiceAddress}] Solr server failed. Error suppressed as not related to Solr core availability. Details: https://issues.apache.org/jira/browse/LUCENE-7188", solrAdmin);
-                    Log.Debug($"SUPPORT: Solr exception\r\n{ex}", solrAdmin);
 
                     return;
                 }
 
                 Log.Warn($"SUPPORT: Unable to connect to [{SolrContentSearchManager.ServiceAddress}]. All Solr search indexes are unavailable.", ex, solrAdmin);
-                Log.Debug($"SUPPORT: Solr exception\r\n{ex}", solrAdmin);
 
                 foreach (var index in SolrContentSearchManager.Indexes)
                 {

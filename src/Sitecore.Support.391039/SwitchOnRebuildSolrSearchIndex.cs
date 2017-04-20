@@ -19,12 +19,8 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
 
         public override void Initialize()
         {
+            // SolrStatusMonitor triggers index intialization 
             SolrStatusMonitor.CheckCoreStatus(this);
-
-            if (this.PreviousConnectionStatus == ConnectionStatus.Succeded)
-            {
-                base.Initialize();
-            }
         }
 
         ConnectionStatus IFailResistantIndex.ConnectionStatus
@@ -38,6 +34,11 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
             {
                 this.PreviousConnectionStatus = value;
             }
+        }
+        
+        void IFailResistantIndex.Init()
+        {
+            base.Initialize();
         }
     }
 }

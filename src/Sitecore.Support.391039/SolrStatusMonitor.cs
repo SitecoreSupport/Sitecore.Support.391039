@@ -51,7 +51,7 @@
                     Log.Info(
                         $"SUPPORT: Connection to [{solrSearchIndex.Core}] Solr core was established. [{solrSearchIndex.Name}] index is being initialized.",
                         solrSearchIndex);
-                    solrSearchIndex.Initialize();
+                    failResistantIndex.Init();
                 }
                 else if (failResistantIndex.ConnectionStatus == ConnectionStatus.Failed)
                 {

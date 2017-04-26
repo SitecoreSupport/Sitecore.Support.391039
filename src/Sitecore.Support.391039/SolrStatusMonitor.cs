@@ -43,7 +43,7 @@
                     return;
                 }
 
-                Log.Warn($"SUPPORT: Unable to connect to [{SolrContentSearchManager.ServiceAddress}]. All Solr search indexes are unavailable.", ex, solrAdmin);
+                Log.Warn("SUPPORT: Solr Connection Error", ex, this);
 
                 this.SetAllIndexStatusToFail(resistantIndexes);
 
@@ -62,6 +62,8 @@
 
         protected virtual void SetAllIndexStatusToFail(IFailResistantIndex[] indexes)
         {
+            Log.Warn($"SUPPORT: Unable to connect to [{SolrContentSearchManager.ServiceAddress}]. All Solr search indexes are unavailable.", this);
+
             foreach (var resistantIndex in indexes)
             {
                 if (resistantIndex.ConnectionStatus != ConnectionStatus.Unknown)
@@ -77,12 +79,28 @@
             {
                 var curStatus = resistantIndex.ConnectionStatus;
 
-                var newStatus = resistantIndex.RefreshStatus();
+                var newStatus = resistantIndex.CheckStatus();
 
-                // First successful connect to the search server
+                if (curStatus == ConnectionStatus.Succeded && newStatus == ConnectionStatus.Failed)
+                {
+                    Log.Warn($"SUPPORT: [Index={resistantIndex.Name}] Connection is lost...", this);
+                    resistantIndex.SetStatus(ConnectionStatus.Failed);
+                    continue;
+                }
+
+                if (curStatus == ConnectionStatus.Failed && newStatus == ConnectionStatus.Succeded)
+                {
+                    Log.Warn($"SUPPORT: [Index={resistantIndex.Name}] Connection is restored...", this);
+                    resistantIndex.SetStatus(ConnectionStatus.Succeded);
+                    continue;
+                }
+
+                // First successful connection to a search server
                 if (curStatus == ConnectionStatus.Unknown && newStatus == ConnectionStatus.Succeded)
                 {
+                    Log.Warn($"SUPPORT: [Index={resistantIndex.Name}] Completing index initialization...", this);
                     resistantIndex.Connect();
+                    continue;
                 }
             }
         }

@@ -51,7 +51,7 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
 
             if (this.ConnectionStatus == ConnectionStatus.Unknown)
             {
-                this.RefreshStatus();
+                this.CheckStatus();
 
                 if (this.ConnectionStatus == ConnectionStatus.Succeded)
                 {
@@ -76,12 +76,11 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
             {
                 // Previous: var status = solrAdmin.Status(this.Core).Single(); 
                 var status = new RefreshableCoreResult(this.Core, true);
-                this.refreshableCoreResult = status;
-
-                // this.summary = new SolrIndexSummary(status, this); 
                 var summary = new SolrIndexSummary(status, this);
-                ReflectionHelper.SetValueToPrivateField(solrSearchIndexType, this, "summary", summary);
 
+                this.refreshableCoreResult = status;
+                // this.summary = new SolrIndexSummary(status, this); 
+                ReflectionHelper.SetValueToPrivateField(solrSearchIndexType, this, "summary", summary);
 
                 // this.schema = new SolrIndexSchema(this.SolrOperations.GetSchema());
                 // Previous: var schema = new SolrIndexSchema(solrOperations.GetSchema()); 
@@ -127,7 +126,7 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
         }
 
 
-        public ConnectionStatus ConnectionStatus
+        public virtual ConnectionStatus ConnectionStatus
         {
             get
             {
@@ -135,12 +134,12 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
             }
         }
 
-        public void SetStatus(ConnectionStatus status)
+        public virtual void SetStatus(ConnectionStatus status)
         {
             this.curConnectionStatus = status;
         }
 
-        public void Connect()
+        public virtual void Connect()
         {
             // this.solrAdmin = SolrContentSearchManager.SolrAdmin;
 
@@ -197,34 +196,21 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
             Log.Error($"SUPPORT: Status check for [{this.Core}] Solr core failed.", exception, this);
         }
 
-        public ConnectionStatus RefreshStatus()
+        public virtual ConnectionStatus CheckStatus()
         {
             ISolrCoreAdmin solrAdmin = SolrContentSearchManager.SolrAdmin;
 
             if (solrAdmin == null)
             {
-                // TODO validate this
-                if (this.curConnectionStatus != ConnectionStatus.Unknown)
-                {
-                    this.curConnectionStatus = ConnectionStatus.Failed;
-                }
-
-                return this.curConnectionStatus;
+                return ConnectionStatus.Unknown;
             }
 
             try
             {
                 var newStatus = solrAdmin.Status(this.Core).FirstOrDefault();
 
-                if (newStatus.Index == null)
-                {
-                    // The response must contain index name otherwise the core doesn't exist
-                    this.curConnectionStatus = ConnectionStatus.Failed;
-                    return this.curConnectionStatus;
-                }
-
-                this.curConnectionStatus = ConnectionStatus.Succeded;
-                return this.curConnectionStatus;
+                // The response must contain index name otherwise the core doesn't exist
+                return newStatus.Index == null ? ConnectionStatus.Failed : ConnectionStatus.Succeded;
             }
             catch (SolrConnectionException ex)
             {
@@ -240,12 +226,7 @@ namespace Sitecore.Support.ContentSearch.SolrProvider
                     Log.Warn($"SUPPORT: Status check for [{this.Core}] Solr core failed.", ex, this);
                 }
 
-                if (this.curConnectionStatus != ConnectionStatus.Unknown)
-                {
-                    this.curConnectionStatus = ConnectionStatus.Failed;
-                }
-
-                return this.curConnectionStatus;
+                return ConnectionStatus.Failed;
             }
         }
     }

@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <HintPath>..\..\lib\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Abstractions">
       <HintPath>..\packages\SC.Sitecore.Abstractions.8.0.3\lib\Sitecore.Abstractions.dll</HintPath>
@@ -49,11 +49,11 @@
     </Reference>
     <Reference Include="Sitecore.ContentSearch.Linq.Solr, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Sitecore.ContentSearch.Linq.Solr.dll</HintPath>
+      <HintPath>..\..\lib\Sitecore.ContentSearch.Linq.Solr.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.ContentSearch.SolrProvider, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Sitecore.ContentSearch.SolrProvider.dll</HintPath>
+      <HintPath>..\..\lib\Sitecore.ContentSearch.SolrProvider.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\packages\SC.Sitecore.Kernel.8.0.3\lib\Sitecore.Kernel.dll</HintPath>
@@ -61,7 +61,7 @@
     </Reference>
     <Reference Include="SolrNet, Version=0.4.0.2002, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\SolrNet.dll</HintPath>
+      <HintPath>..\..\lib\SolrNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -83,10 +83,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\Include\Sitecore.Support.391039.config" />
-    <Content Include="lib\Microsoft.Practices.ServiceLocation.dll" />
-    <Content Include="lib\Sitecore.ContentSearch.Linq.Solr.dll" />
-    <Content Include="lib\Sitecore.ContentSearch.SolrProvider.dll" />
-    <Content Include="lib\SolrNet.dll" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

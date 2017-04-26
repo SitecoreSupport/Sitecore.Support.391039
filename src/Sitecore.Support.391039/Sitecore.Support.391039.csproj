@@ -70,8 +70,11 @@
   <ItemGroup>
     <Compile Include="ConnectionStatus.cs" />
     <Compile Include="IFailResistantIndex.cs" />
+    <Compile Include="IRefreshableSource.cs" />
     <Compile Include="LinqToSolrIndex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RefreshableCoreResult.cs" />
+    <Compile Include="RefreshableSolrIndexSchema.cs" />
     <Compile Include="SolrSearchContext.cs" />
     <Compile Include="SolrSearchIndex.cs" />
     <Compile Include="SolrStatusMonitor.cs" />

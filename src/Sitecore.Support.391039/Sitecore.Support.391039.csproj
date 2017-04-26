@@ -79,6 +79,7 @@
     <Compile Include="SolrSearchIndex.cs" />
     <Compile Include="SolrStatusMonitor.cs" />
     <Compile Include="SwitchOnRebuildSolrSearchIndex.cs" />
+    <Compile Include="Utils\ReflectionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\Include\Sitecore.Support.391039.config" />

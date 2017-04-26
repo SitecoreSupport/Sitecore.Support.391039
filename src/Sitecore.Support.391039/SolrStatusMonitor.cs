@@ -7,15 +7,14 @@
     using Sitecore.Diagnostics;
     using System;
     using System.Linq;
-    using Sitecore.ContentSearch;
     using SolrNet;
     using SolrNet.Exceptions;
 
     public class SolrStatusMonitor : IHook
     {
-        private static AlarmClock _alarmClock;
-
-        internal static void CheckCoreStatus(ISearchIndex index)
+        protected AlarmClock alarmClock;
+        
+        protected virtual void CheckSolrStatus(object sender, EventArgs args)
         {
             ISolrCoreAdmin solrAdmin = SolrContentSearchManager.SolrAdmin;
             if (solrAdmin == null)
@@ -23,81 +22,20 @@
                 return;
             }
 
-            var solrSearchIndex = index as Sitecore.ContentSearch.SolrProvider.SolrSearchIndex;
-            if (solrSearchIndex == null)
+            var allIndexes = SolrContentSearchManager.Indexes.ToArray();
+
+            // TODO Check Cast
+            var resistantIndexes = allIndexes.Where(indx => indx is IFailResistantIndex).Cast<IFailResistantIndex>().ToArray();
+
+            if (resistantIndexes.Length == 0)
             {
-                return;
-            }
-
-            var failResistantIndex = index as IFailResistantIndex;
-
-            if (failResistantIndex == null)
-            {
-                // the index doesn't support this feature, so the index is considered as always available
-                return;
-            }
-
-            try
-            {
-                var newStatus = solrAdmin.Status(solrSearchIndex.Core).FirstOrDefault();
-
-                if (newStatus.Index == null)
-                {
-                    throw new SolrConnectionException("SUPPORT: Core's index is null.");
-                }
-
-                if (failResistantIndex.ConnectionStatus == ConnectionStatus.Unknown)
-                {
-                    Log.Info(
-                        $"SUPPORT: Connection to [{solrSearchIndex.Core}] Solr core was established. [{solrSearchIndex.Name}] index is being initialized.",
-                        solrSearchIndex);
-                    failResistantIndex.Init();
-                }
-                else if (failResistantIndex.ConnectionStatus == ConnectionStatus.Failed)
-                {
-                    Log.Info($"SUPPORT: Connection to [{solrSearchIndex.Core}] Solr core was restored.", solrSearchIndex);
-                }
-
-                failResistantIndex.ConnectionStatus = ConnectionStatus.Succeded;
-            }
-            catch (SolrConnectionException ex)
-            {
-                if (ex.Message.Contains("java.lang.IllegalStateException") && ex.Message.Contains("appears both in delegate and in cache"))
-                {
-                    Log.Warn(
-                        $"SUPPORT: Status check for [{solrSearchIndex.Core}] Solr core failed. Error suppressed as not related to Solr core availability. Details: https://issues.apache.org/jira/browse/LUCENE-7188",
-                        solrSearchIndex);
-
-                    return;
-                }
-
-                Log.Warn($"SUPPORT: Unable to connect to [{SolrContentSearchManager.ServiceAddress}], Core: [{solrSearchIndex.Core}]",
-                    ex, solrSearchIndex);
-
-                if (failResistantIndex.ConnectionStatus == ConnectionStatus.Succeded)
-                {
-                    Log.Warn($"SUPPORT: Connection to [{solrSearchIndex.Core}] Solr core was lost.", failResistantIndex);
-
-                    failResistantIndex.ConnectionStatus = ConnectionStatus.Failed;
-                }
-                else if (failResistantIndex.ConnectionStatus == ConnectionStatus.Unknown)
-                {
-                    Log.Warn($"SUPPORT: Connection to [{solrSearchIndex.Core}] Solr core was not established.", failResistantIndex);
-                }
-            }
-        }
-
-        private static void CheckSolrStatus(object sender, EventArgs args)
-        {
-            ISolrCoreAdmin solrAdmin = SolrContentSearchManager.SolrAdmin;
-            if (solrAdmin == null)
-            {
+                // Nothing to check, the feature is not used
                 return;
             }
 
             try
             {
-                var coreResult = solrAdmin.Status().FirstOrDefault();
+                var status = solrAdmin.Status().FirstOrDefault();
             }
             catch (SolrConnectionException ex)
             {
@@ -110,30 +48,48 @@
 
                 Log.Warn($"SUPPORT: Unable to connect to [{SolrContentSearchManager.ServiceAddress}]. All Solr search indexes are unavailable.", ex, solrAdmin);
 
-                foreach (var index in SolrContentSearchManager.Indexes)
-                {
-                    var resistantIndex = index as IFailResistantIndex;
-                    if (resistantIndex != null && resistantIndex.ConnectionStatus != ConnectionStatus.Unknown)
-                    {
-                        resistantIndex.ConnectionStatus = ConnectionStatus.Failed;
-                    }
-                }
+                this.SetAllIndexStatusToFail(resistantIndexes);
 
                 return;
             }
 
-            foreach (var index in SolrContentSearchManager.Indexes)
+            this.CheckIndexStatus(resistantIndexes);
+        }
+
+
+
+        protected virtual void SetAllIndexStatusToFail(IFailResistantIndex[] indexes)
+        {
+            foreach (var resistantIndex in indexes)
             {
-                CheckCoreStatus(index);
+                if (resistantIndex.ConnectionStatus != ConnectionStatus.Unknown)
+                {
+                    resistantIndex.SetStatus(ConnectionStatus.Failed);
+                }
+            }
+        }
+
+        protected virtual void CheckIndexStatus(IFailResistantIndex[] indexes)
+        {
+            foreach (var resistantIndex in indexes)
+            {
+                var curStatus = resistantIndex.ConnectionStatus;
+
+                var newStatus = resistantIndex.RefreshStatus();
+
+                // First succesfull connect to the search server
+                if (curStatus == ConnectionStatus.Unknown && newStatus == ConnectionStatus.Succeded)
+                {
+                    resistantIndex.Connect();
+                }
             }
         }
 
         public void Initialize()
         {
             TimeSpan updateInterval = Settings.GetTimeSpanSetting("ContentSearch.SolrStatusMonitor.Interval", TimeSpan.FromSeconds(10));
-            _alarmClock = new AlarmClock(updateInterval);
-            _alarmClock.Ring += CheckSolrStatus;
+            alarmClock = new AlarmClock(updateInterval);
+            alarmClock.Ring += CheckSolrStatus;
         }
     }
 }
-

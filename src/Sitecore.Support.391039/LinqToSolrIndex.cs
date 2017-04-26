@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using Sitecore.ContentSearch;
     using Sitecore.ContentSearch.Linq;
@@ -57,7 +56,7 @@
             var solrIndex = this.context.Index as Sitecore.ContentSearch.SolrProvider.SolrSearchIndex;
             Log.Error("SUPPORT: unable to execute a search query. Solr core [" + solrIndex.Core + "] is unavailable.", this);
 
-            return default(TResult);
+            return this.CreateEmptyObject<TResult>(compositeQuery);
         }
 
         protected virtual bool IsIndexAvailable(ISearchIndex index)
@@ -77,7 +76,41 @@
 
             return false;
         }
-        
+
+        protected virtual TResult CreateEmptyObject<TResult>(SolrCompositeQuery compositeQuery)
+        {
+            Type documentType;
+
+            if (typeof(TResult).IsGenericType && typeof(TResult).GetGenericTypeDefinition() == typeof(SearchResults<>))
+            {
+                documentType = typeof(TResult).GetGenericArguments()[0];
+            }
+            else
+            {
+                documentType = typeof(TResult);
+            }
+
+            Assembly assembly = Assembly.GetAssembly(typeof(Sitecore.ContentSearch.SolrProvider.SolrSearchIndex));
+            Type solrSearchResultsType = assembly.GetType("Sitecore.ContentSearch.SolrProvider.SolrSearchResults`1", true);
+
+            var solrSearchResultsGenericType = solrSearchResultsType.MakeGenericType(documentType);
+
+            // TODO Check this
+            var applyScalarMethodsMethod = typeof(Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>)
+                .GetMethod("ApplyScalarMethods", BindingFlags.Instance | BindingFlags.NonPublic);
+            var applyScalarMethodsGenericMethod = applyScalarMethodsMethod.MakeGenericMethod(typeof(TResult),
+                documentType);
+
+            var results = new SolrQueryResults<Dictionary<string, object>>();
+
+            var processedResults = ReflectionUtility.CreateInstance(solrSearchResultsGenericType, this.context, results,
+                null, compositeQuery.ExecutionContexts, compositeQuery.VirtualFieldProcessors);
+
+            var resultObject = applyScalarMethodsGenericMethod.Invoke(this, new object[] { compositeQuery, processedResults, results });
+
+            return (TResult) resultObject;
+        }
+
         [UsedImplicitly]
         private TResult ApplyScalarMethods<TResult, TDocument>(SolrCompositeQuery compositeQuery, object processedResults, SolrQueryResults<Dictionary<string, object>> results)
         {

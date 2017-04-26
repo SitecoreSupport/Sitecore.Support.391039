@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.Support.ContentSearch.SolrProvider
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Sitecore.ContentSearch;
     using Sitecore.ContentSearch.Diagnostics;
@@ -9,7 +8,6 @@
     using Sitecore.ContentSearch.SearchTypes;
     using Sitecore.ContentSearch.Security;
     using Sitecore.ContentSearch.Utilities;
-    using Sitecore.Diagnostics;
 
     public class SolrSearchContext : Sitecore.ContentSearch.SolrProvider.SolrSearchContext, IProviderSearchContext
     {
@@ -40,18 +38,7 @@
 
         protected virtual IQueryable<TItem> GetQueryableImpl<TItem>(params IExecutionContext[] executionContexts)
         {
-            var failResistantIndex = this.Index as IFailResistantIndex;
-
-            if (failResistantIndex != null)
-            {
-                if (failResistantIndex.ConnectionStatus != ConnectionStatus.Succeded)
-                {
-                    Log.Error("SUPPORT: unable to execute a search query. Solr core [" + this.index.Core + "] is unavailable.", this);
-                    return new EnumerableQuery<TItem>(new List<TItem>());
-                }
-            }
-
-            LinqToSolrIndex<TItem> linqToSolrIndex = new Sitecore.Support.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>(this, executionContexts);
+            var linqToSolrIndex = new Sitecore.Support.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>(this, executionContexts);
 
             if (this.contentSearchSettings.EnableSearchDebug())
             {

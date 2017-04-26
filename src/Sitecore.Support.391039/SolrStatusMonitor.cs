@@ -22,10 +22,7 @@
                 return;
             }
 
-            var allIndexes = SolrContentSearchManager.Indexes.ToArray();
-
-            // TODO Check Cast
-            var resistantIndexes = allIndexes.Where(indx => indx is IFailResistantIndex).Cast<IFailResistantIndex>().ToArray();
+            var resistantIndexes = this.GetResistantIndexes();
 
             if (resistantIndexes.Length == 0)
             {
@@ -53,10 +50,15 @@
                 return;
             }
 
-            this.CheckIndexStatus(resistantIndexes);
+            this.CheckIndexStatusSeparately(resistantIndexes);
         }
 
+        protected virtual IFailResistantIndex[] GetResistantIndexes()
+        {
+            var allIndexes = SolrContentSearchManager.Indexes.ToArray();
 
+            return allIndexes.Where(indx => indx is IFailResistantIndex).Cast<IFailResistantIndex>().ToArray();
+        }
 
         protected virtual void SetAllIndexStatusToFail(IFailResistantIndex[] indexes)
         {
@@ -69,7 +71,7 @@
             }
         }
 
-        protected virtual void CheckIndexStatus(IFailResistantIndex[] indexes)
+        protected virtual void CheckIndexStatusSeparately(IFailResistantIndex[] indexes)
         {
             foreach (var resistantIndex in indexes)
             {
@@ -77,7 +79,7 @@
 
                 var newStatus = resistantIndex.RefreshStatus();
 
-                // First succesfull connect to the search server
+                // First successful connect to the search server
                 if (curStatus == ConnectionStatus.Unknown && newStatus == ConnectionStatus.Succeded)
                 {
                     resistantIndex.Connect();

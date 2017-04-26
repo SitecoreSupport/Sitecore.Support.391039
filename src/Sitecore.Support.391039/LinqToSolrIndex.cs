@@ -95,18 +95,17 @@
 
             var solrSearchResultsGenericType = solrSearchResultsType.MakeGenericType(documentType);
 
-            // TODO Check this
             var applyScalarMethodsMethod = typeof(Sitecore.ContentSearch.SolrProvider.LinqToSolrIndex<TItem>)
                 .GetMethod("ApplyScalarMethods", BindingFlags.Instance | BindingFlags.NonPublic);
             var applyScalarMethodsGenericMethod = applyScalarMethodsMethod.MakeGenericMethod(typeof(TResult),
                 documentType);
 
-            var results = new SolrQueryResults<Dictionary<string, object>>();
+            var emptyResults = new SolrQueryResults<Dictionary<string, object>>();
 
-            var processedResults = ReflectionUtility.CreateInstance(solrSearchResultsGenericType, this.context, results,
+            var processedResults = ReflectionUtility.CreateInstance(solrSearchResultsGenericType, this.context, emptyResults,
                 null, compositeQuery.ExecutionContexts, compositeQuery.VirtualFieldProcessors);
 
-            var resultObject = applyScalarMethodsGenericMethod.Invoke(this, new object[] { compositeQuery, processedResults, results });
+            var resultObject = applyScalarMethodsGenericMethod.Invoke(this, new object[] { compositeQuery, processedResults, emptyResults });
 
             return (TResult) resultObject;
         }
